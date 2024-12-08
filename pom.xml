@@ -13,4 +13,12 @@
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.telegram</groupId>
+            <artifactId>telegrambots</artifactId>
+            <version>6.9.7.1</version>
+        </dependency>
+    </dependencies>
+
 </project>

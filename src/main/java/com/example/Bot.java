@@ -31,6 +31,10 @@ public class Bot extends TelegramLongPollingBot {
                 case "/help":
                     sendHelpMessage(chatId);
                     break;
+
+                default:
+                    sendErrorMessage(chatId);
+                    break;
             }
         }
     }
@@ -52,15 +56,29 @@ public class Bot extends TelegramLongPollingBot {
     private void sendHelpMessage(Long chatId) {
         String helpText = "Вот список доступных команд:\r\n" + //
                         "- /create_message [текст] - Создать общее сообщение для вашей команды.\r\n" + //
+                        "- /change_message [номер сообщения] - Изменить одно из общих сообщений.\r\n" + //
                         "- /create_todo [задача] - Добавить задачу в To-Do список.\r\n" + //
                         "- /view_todos - Просмотреть текущий To-Do список.\r\n" + //
                         "- /delete_todo [номер задачи] - Удалить задачу из To-Do списка.\r\n" + //
                         "\r\n" + //
-                        "Если у вас есть вопросы или нужна помощь, вы можете написать создателю бота!\r\n" + //
+                        "Если у вас есть вопросы или нужна помощь, обратитесь к администратору!\r\n" + //
                         "";
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
         message.setText(helpText);
+        executeWithExceptionHandling(message);
+    }
+
+    private void sendErrorMessage(Long chatId) {
+        String welcomeText = "Ошибка: Неправильная команда\r\n" + //
+                        "\r\n" + //
+                        "Вы ввели команду, которая не распознана ботом. Пожалуйста, убедитесь, что ваша команда написана правильно и соответствует одному из доступных форматов.\r\n" + //
+                        "\r\n" + //
+                        "Проверьте список доступных команд, введя /help, чтобы увидеть все доступные функции бота.\r\n" + //
+                        "";
+        SendMessage message = new SendMessage();
+        message.setChatId(chatId);
+        message.setText(welcomeText);
         executeWithExceptionHandling(message);
     }
 

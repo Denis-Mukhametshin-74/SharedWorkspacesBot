@@ -1,5 +1,6 @@
 package com.example;
 import com.example.GeneralMessages.MessageManager;
+import com.example.ToDoLists.TodoManager;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -10,9 +11,11 @@ import java.util.List;
 @SuppressWarnings("deprecation")
 public class TelegramBot extends TelegramLongPollingBot {
     private MessageManager messageManager;
+    private TodoManager todoManager;
 
     public TelegramBot() {
         this.messageManager = new MessageManager();
+        this.todoManager = new TodoManager();
     }
 
     @Override
@@ -72,6 +75,22 @@ public class TelegramBot extends TelegramLongPollingBot {
 
                 case "/view_messages":
                     viewMessages(chatId);
+                    break;
+
+                case "/create_todo":
+                    handleCreateTodo(chatId, commandParts);
+                    break;
+
+                case "/status_todo":
+                    handleChangeStatus(chatId, commandParts);
+                    break;
+
+                case "/view_todos":
+                    viewTodos(chatId);
+                    break;
+
+                case "/delete_todo":
+                    handleDeleteTodo(chatId, commandParts);
                     break;
 
                 default:
@@ -146,6 +165,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                         "- /delete_message [номер сообщения] - Удалить одно из общих сообщений.\r\n" + //
                         "- /view_messages - Просмотреть все сообщения.\r\n" +
                         "- /create_todo [задача] - Добавить задачу в To-Do список.\r\n" + //
+                        "- /status_todo [номер задачи] - Изменить текущий статус выполнения задачи.\r\n" + //
                         "- /view_todos - Просмотреть текущий To-Do список.\r\n" + //
                         "- /delete_todo [номер задачи] - Удалить задачу из To-Do списка.\r\n" + //
                         "\r\n" + //
@@ -164,10 +184,58 @@ public class TelegramBot extends TelegramLongPollingBot {
         sendResponse(chatId, errorText);
     }
 
+    private void handleCreateTodo(Long chatId, String[] commandParts) {
+        if (checkCommandParameters(commandParts, 1)) {
+            String task = commandParts[1];
+            todoManager.addTask(task);
+            sendResponse(chatId, "Задача добавлена: " + task);
+        } else {
+            sendErrorMessage(chatId);
+        }
+    }
+
+    private void handleChangeStatus(Long chatId, String[] commandParts) {
+        if (checkCommandParameters(commandParts, 1)) {
+            try {
+                int taskNumber = Integer.parseInt(commandParts[1]) - 1;
+                String response = todoManager.changeTaskStatus(taskNumber);
+                sendResponse(chatId, response);
+            } catch (NumberFormatException e) {
+                sendErrorMessage(chatId);
+            }
+        } else {
+            sendErrorMessage(chatId);
+        }
+    }    
+
+    private void viewTodos(Long chatId) {
+        String response = todoManager.viewTasks();
+        sendResponse(chatId, response);
+    }
+
+    private void handleDeleteTodo(Long chatId, String[] commandParts) {
+        if (checkCommandParameters(commandParts, 1)) {
+            try {
+                int taskNumber = Integer.parseInt(commandParts[1]) - 1;
+                String response = todoManager.deleteTask(taskNumber);
+                sendResponse(chatId, response);
+            } catch (NumberFormatException e) {
+                sendErrorMessage(chatId);
+            }
+        } else {
+            sendErrorMessage(chatId);
+        }
+    }
+
+    private boolean checkCommandParameters(String[] commandParts, int expectedLength) {
+        return commandParts.length > expectedLength;
+    }
+
     private void sendResponse(Long chatId, String text) {
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
         message.setText(text);
+        message.enableMarkdown(true);
         executeWithExceptionHandling(message);
     }
 

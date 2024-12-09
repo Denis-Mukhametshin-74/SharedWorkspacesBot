@@ -62,6 +62,14 @@ public class TelegramBot extends TelegramLongPollingBot {
                     }
                     break;
 
+                case "/delete_message":
+                    if (commandParts.length > 1) {
+                        deleteGeneralMessage(chatId, commandParts[1]);
+                    } else {
+                        sendErrorMessage(chatId);
+                    }
+                    break;
+
                 case "/view_messages":
                     viewMessages(chatId);
                     break;
@@ -84,6 +92,20 @@ public class TelegramBot extends TelegramLongPollingBot {
             int index = Integer.parseInt(indexStr) - 1;
             if (messageManager.changeMessage(index, newText)) {
                 String responseText = "Сообщение изменено: " + newText;
+                sendResponse(chatId, responseText);
+            } else {
+                sendErrorMessage(chatId);
+            }
+        } catch (NumberFormatException e) {
+            sendErrorMessage(chatId);
+        }
+    }
+
+    private void deleteGeneralMessage(Long chatId, String indexStr) {
+        try {
+            int index = Integer.parseInt(indexStr) - 1;
+            if (messageManager.deleteMessage(index)) {
+                String responseText = "Сообщение удалено.";
                 sendResponse(chatId, responseText);
             } else {
                 sendErrorMessage(chatId);
@@ -121,6 +143,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         String helpText = "Вот список доступных команд:\r\n" + //
                         "- /create_message [текст] - Создать общее сообщение для вашей команды.\r\n" + //
                         "- /change_message [номер сообщения] [текст] - Изменить одно из общих сообщений.\r\n" + //
+                        "- /delete_message [номер сообщения] - Удалить одно из общих сообщений.\r\n" + //
                         "- /view_messages - Просмотреть все сообщения.\r\n" +
                         "- /create_todo [задача] - Добавить задачу в To-Do список.\r\n" + //
                         "- /view_todos - Просмотреть текущий To-Do список.\r\n" + //

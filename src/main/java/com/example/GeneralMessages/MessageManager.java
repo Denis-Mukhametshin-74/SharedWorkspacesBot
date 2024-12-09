@@ -11,12 +11,14 @@ public class MessageManager {
     }
 
     public void createMessage(String text) {
-        messages.add(text);
+        if (text != null && !text.trim().isEmpty()) {
+            messages.add(text.trim());
+        }
     }
 
     public boolean changeMessage(int index, String newText) {
         if (index >= 0 && index < messages.size()) {
-            messages.set(index, newText);
+            messages.set(index, newText.trim());
             return true;
         }
         return false;
@@ -26,10 +28,11 @@ public class MessageManager {
         return messages;
     }
 
-    public String getMessage(int index) {
+    public boolean deleteMessage(int index) {
         if (index >= 0 && index < messages.size()) {
-            return messages.get(index);
+            messages.remove(index);
+            return true;
         }
-        return null;
+        return false;
     }
 }

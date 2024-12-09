@@ -31,7 +31,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             String messageText = update.getMessage().getText();
             Long chatId = update.getMessage().getChatId();
 
-            String[] commandParts = messageText.split(" ", 3);
+            String[] commandParts = messageText.split(" ", 2);
             switch (commandParts[0]) {
                 case "/start":
                     sendStartMessage(chatId);
@@ -50,10 +50,15 @@ public class TelegramBot extends TelegramLongPollingBot {
                     break;
 
                 case "/change_message":
-                    if (commandParts.length > 2) {
-                        changeGeneralMessage(chatId, commandParts[1], commandParts[2]);
-                    } else {
+                    if (commandParts.length <= 1) {
                         sendErrorMessage(chatId);
+                    } else {
+                        String[] changeParts = commandParts[1].split(" ", 2);
+                        if (changeParts.length > 1) {
+                            changeGeneralMessage(chatId, changeParts[0], changeParts[1]);
+                        } else {
+                            sendErrorMessage(chatId);
+                        }
                     }
                     break;
 
@@ -115,7 +120,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     private void sendHelpMessage(Long chatId) {
         String helpText = "Вот список доступных команд:\r\n" + //
                         "- /create_message [текст] - Создать общее сообщение для вашей команды.\r\n" + //
-                        "- /change_message [номер сообщения] - Изменить одно из общих сообщений.\r\n" + //
+                        "- /change_message [номер сообщения] [текст] - Изменить одно из общих сообщений.\r\n" + //
                         "- /view_messages - Просмотреть все сообщения.\r\n" +
                         "- /create_todo [задача] - Добавить задачу в To-Do список.\r\n" + //
                         "- /view_todos - Просмотреть текущий To-Do список.\r\n" + //

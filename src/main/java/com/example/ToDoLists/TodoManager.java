@@ -23,7 +23,7 @@ public class TodoManager {
         } else {
             StringBuilder todos = new StringBuilder("Ваш To-Do список:\n");
             for (int i = 0; i < todoList.size(); i++) {
-                String taskDisplay = taskStatus.get(i) ? "~~" + todoList.get(i) + "~~" : todoList.get(i);
+                String taskDisplay = taskStatus.get(i) ? "<s>" + todoList.get(i) + "</s>" : todoList.get(i);
                 todos.append(i + 1).append(": ").append(taskDisplay).append("\n");
             }
             return todos.toString();
@@ -43,7 +43,7 @@ public class TodoManager {
         if (taskNumber >= 0 && taskNumber < taskStatus.size()) {
             boolean currentStatus = taskStatus.get(taskNumber);
             taskStatus.set(taskNumber, !currentStatus);
-            return "Статус задачи " + (currentStatus ? "установлен на **не выполнено**." : "установлен на **выполнено**.");
+            return "Статус задачи " + (currentStatus ? "установлен на <b>не выполнено</b>." : "установлен на <b>выполнено</b>.");
         } else {
             return "Ошибка: неверный номер задачи.";
         }

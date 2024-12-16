@@ -51,7 +51,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                         sendErrorMessage(chatId);
                     }
                     break;
-
+                    
                 case "/change_message":
                     if (commandParts.length <= 1) {
                         sendErrorMessage(chatId);

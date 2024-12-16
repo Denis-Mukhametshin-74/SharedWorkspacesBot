@@ -1,17 +1,12 @@
 package com.example.UserRequests.CommandFiles;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 public class Help {
 
     public SendMessage sendHelpMessage(Long chatId) {
 
-        String welcomeText =
+        String helpText =
             "✨ Вот список доступных команд: ✨\r\n" +
             "\r\n" +
             "📩 <b>Создание сообщений:</b>\r\n" +
@@ -46,27 +41,10 @@ public class Help {
             "\r\n" +
             "❓ <b>Если у вас есть вопросы или нужна помощь, напишите @LaR4uK!</b> 🤝\r\n";
 
-        InlineKeyboardMarkup keyboardMarkup = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-
-        List<InlineKeyboardButton> row1 = new ArrayList<>();
-        row1.add(InlineKeyboardButton.builder().text("Общее сообщение").callbackData("/create_message").build());
-        row1.add(InlineKeyboardButton.builder().text("To-Do задача").callbackData("/create_todo").build());
-    
-        List<InlineKeyboardButton> row2 = new ArrayList<>();
-        row2.add(InlineKeyboardButton.builder().text("Напоминание").callbackData("/create_reminder").build());
-        row2.add(InlineKeyboardButton.builder().text("Помощь").callbackData("/help").build());
-
-        buttons.add(row1);
-        buttons.add(row2);
-
-        keyboardMarkup.setKeyboard(buttons);
-
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
-        message.setText(welcomeText);
+        message.setText(helpText);
         message.setParseMode("HTML");
-        message.setReplyMarkup(keyboardMarkup);
 
         return message;
 

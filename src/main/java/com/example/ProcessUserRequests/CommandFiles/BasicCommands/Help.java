@@ -1,4 +1,4 @@
-package com.example.ProcessUserRequests.CommandFiles;
+package com.example.ProcessUserRequests.CommandFiles.BasicCommands;
 
 import java.util.ArrayList;
 import java.util.List;

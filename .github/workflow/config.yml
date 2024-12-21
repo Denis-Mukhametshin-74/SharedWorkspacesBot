@@ -1,0 +1,24 @@
+name: Build Settings
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+
+      - name: Build with Maven
+        env:
+          bot-name: ${{ secrets.BOT_NAME }}
+          bot-token: ${{ secrets.BOT_TOKEN }}
+        run: mvn clean install

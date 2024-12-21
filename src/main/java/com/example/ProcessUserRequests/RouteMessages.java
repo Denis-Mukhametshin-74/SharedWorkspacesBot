@@ -1,7 +1,8 @@
-package com.example.UserRequests;
-import com.example.UserRequests.CommandFiles.Help;
-import com.example.UserRequests.CommandFiles.Start;
-import com.example.UserRequests.CommandFiles.Error;
+package com.example.ProcessUserRequests;
+
+import com.example.ProcessUserRequests.CommandFiles.Error;
+import com.example.ProcessUserRequests.CommandFiles.Help;
+import com.example.ProcessUserRequests.CommandFiles.Start;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 

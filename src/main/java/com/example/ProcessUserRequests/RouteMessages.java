@@ -9,6 +9,10 @@ import com.example.ProcessUserRequests.CommandFiles.CustomCommands.CreateMessage
 import com.example.ProcessUserRequests.CommandFiles.CustomCommands.CreateTodo;
 import com.example.ProcessUserRequests.CommandFiles.CustomCommands.CreateReminder;
 
+import com.example.ProcessUserRequests.CommandFiles.CustomCommands.ViewMessages;
+import com.example.ProcessUserRequests.CommandFiles.CustomCommands.ViewTodos;
+import com.example.ProcessUserRequests.CommandFiles.CustomCommands.ViewReminders;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,8 +29,12 @@ public class RouteMessages {
     private CreateTodo createTodo;
     private CreateReminder createReminder;
 
-    private Map<Long, WaitingState> waitingForInput = new HashMap<>();
-    private enum WaitingState {
+    private ViewMessages viewMessages;
+    private ViewTodos viewTodos;
+    private ViewReminders viewReminders;
+
+    public Map<Long, WaitingState> waitingForInput = new HashMap<>();
+    public enum WaitingState {
         NONE,
         CREATING_MESSAGE,
         CREATING_TASK,
@@ -42,6 +50,10 @@ public class RouteMessages {
         this.createMessage = new CreateMessage();
         this.createTodo = new CreateTodo();
         this.createReminder = new CreateReminder();
+
+        this.viewMessages = new ViewMessages();
+        this.viewTodos = new ViewTodos();
+        this.viewReminders = new ViewReminders();
     }
 
     public SendMessage handleUserInteraction(String commandData, Long chatId) {
@@ -94,6 +106,15 @@ public class RouteMessages {
             case "/create_reminder":
                 waitingForInput.put(chatId, WaitingState.CREATING_REMINDER);
                 return createReminder.sendCreateReminder(chatId, false);
+
+            case "/view_messages":
+                return viewMessages.sendViewMessages(chatId);
+
+            case "/view_todos":
+                return viewTodos.sendViewTodos(chatId);
+
+            case "/view_reminders":
+                return viewReminders.sendViewReminders(chatId);
 
             default:
                 return error.sendErrorMessage(chatId, false);
